@@ -7,7 +7,6 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var path        = require('path');
-var cookieParser = require('cookie-parser')
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 //var User   = require('./models/user'); // get our mongoose model
@@ -15,7 +14,6 @@ var Users = require('./controller/userController')
 var Posts = require('./controller/postController')
 var apiRoutes = express.Router();
 
-app.use(cookieParser())
 // =======================
 // configuration =========
 // =======================
@@ -34,7 +32,6 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 app.get('/', function(req, res) {
-    //res.send('Hello! The API is at http://localhost:' + port + '/api');
     Users.getUsers(function(err,users){
         if(err) throw err;
         res.render('home',{
@@ -230,39 +227,6 @@ apiRoutes.post('/user/add',function(req,res){
             });
         }
     });
-});
-
-app.get('/api/posts',function(req,res){
-    //res.send('api/posts endpoint');
-    Posts.getPost(req,res);
-});
-
-app.get('/api/users/oid/:oid',function(req,res){
-    res.send('api/users/oid '+req.params.oid);
-});
-
-app.get('/api/posts/:id',function(req,res){
-    //res.send('api/posts '+req.params.id);
-    var id = req.params.id;
-    Posts.getPostByID(id,function(err,post){
-        if(err) throw err;
-        res.json(post);
-    });
-});
-app.get('/api/posts/userid/:uid',function(req,res){
-    var id = req.params.uid;
-    Posts.getPostbyUserID(id,req,res);
-});
-
-
-// API ROUTES -------------------
-// we'll get to these in a second
-apiRoutes.get('/', function(req, res) {
-	res.json({ message: 'Welcome to the coolest API on earth!' });
-});
-
-apiRoutes.get('/check', function(req, res) {
-	res.json(req.decoded);
 });
 
 app.use('/api', apiRoutes);
